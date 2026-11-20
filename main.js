@@ -9,6 +9,7 @@
  // scroll reveal: replays when scrolling down and back up
  var io=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('in',e.isIntersecting)})},{threshold:.12});
  $('.rv').forEach(function(e,i){e.style.transitionDelay=(i%4)*90+'ms';io.observe(e)});
+ document.documentElement.classList.add('js');
  // counters
  var co=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var el=e.target,t=+el.dataset.n,s=0;
   (function st(){s+=Math.ceil(t/50);if(s>t)s=t;el.textContent=s+(el.dataset.s||'');if(s<t)requestAnimationFrame(st)})();co.unobserve(el)})},{threshold:.6});
