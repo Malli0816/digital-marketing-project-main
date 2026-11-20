@@ -1,0 +1,7 @@
+.git
+.gitignore
+Dockerfile
+Jenkinsfile
+README.md
+README-DEPLOYMENT.txt
+nginx
