@@ -13,12 +13,17 @@
  greeter.appendChild(greeting);greeter.appendChild(character);document.body.appendChild(greeter);greeter.classList.add('is-intro');
  setTimeout(function(){greeter.classList.remove('is-intro')},4800);
  if('speechSynthesis' in window&&'SpeechSynthesisUtterance' in window){
-  var utterance=new SpeechSynthesisUtterance(greetingText);utterance.lang='en-IN';utterance.rate=.95;utterance.pitch=1.05;
-  var voices=window.speechSynthesis.getVoices(),female=/female|woman|zira|hazel|susan|samantha|victoria|aria|jenny|heera|neerja|swara|priya|kavya|sara|libby|sonia/i;
-  var voice=voices.find(function(v){return /^en-in/i.test(v.lang)&&female.test(v.name)})||voices.find(function(v){return /^en/i.test(v.lang)&&female.test(v.name)})||voices.find(function(v){return /^en-in/i.test(v.lang)})||voices.find(function(v){return /^en/i.test(v.lang)});
-  if(voice){utterance.voice=voice;utterance.lang=voice.lang}
-  window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);
-  window.addEventListener('pagehide',function(){window.speechSynthesis.cancel()});
+  var utterance=new SpeechSynthesisUtterance(greetingText),speech=window.speechSynthesis,attempts=0,voiceTimer=null,leaving=false;
+  var female=/female|woman|zira|hazel|susan|samantha|victoria|aria|jenny|heera|neerja|swara|priya|kavya|sara|libby|sonia/i;
+  utterance.rate=.92;utterance.pitch=1.18;
+  function speakFemale(){
+   if(leaving)return;
+   var voices=speech.getVoices(),voice=voices.find(function(v){return /zira/i.test(v.name)&&/^en/i.test(v.lang)})||voices.find(function(v){return /^en-in/i.test(v.lang)&&female.test(v.name)})||voices.find(function(v){return /^en/i.test(v.lang)&&female.test(v.name)});
+   if(!voice){if(attempts++<15)voiceTimer=setTimeout(speakFemale,100);return}
+   speech.cancel();utterance.voice=voice;utterance.lang=voice.lang;speech.speak(utterance)
+  }
+  speakFemale();
+  window.addEventListener('pagehide',function(){leaving=true;if(voiceTimer)clearTimeout(voiceTimer);speech.cancel()});
  }
  var btn=el('button','chatbtn','<span>🤖</span><span class="t">Ask AI</span><i class="dot"></i>');btn.setAttribute('aria-label','Open AI chat');
  var box=el('div','chat');box.setAttribute('role','dialog');box.setAttribute('aria-label','AI assistant');
