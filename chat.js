@@ -1,8 +1,25 @@
 (function(){
  var KEY='dms_chat_v1',API='/api/chat',msgs=[],open=false;
  try{msgs=JSON.parse(sessionStorage.getItem(KEY)||'[]')}catch(e){}
- try{open=sessionStorage.getItem(KEY+'o')==='1'}catch(e){}
  function el(t,c,h){var e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e}
+ var file=(location.pathname.split('/').pop()||'index.html').toLowerCase();
+ var pageNames={'index.html':'Home','service-local-seo.html':'Local SEO','service-video-editing.html':'Video Editing','service-ai-promotional-videos.html':'AI Promotional Videos'};
+ var pageName=pageNames[file]||(document.title.split('|')[0]||'').trim()||'this';
+ var greeter=el('div','page-greeter'),greeting=el('span','page-greeter-message'),character=el('img','page-greeter-character');
+ greeter.setAttribute('role','status');greeter.setAttribute('aria-live','polite');greeter.setAttribute('aria-atomic','true');
+ character.src='assets/assistant-character.svg';character.alt='';character.setAttribute('aria-hidden','true');
+ var greetingText="Hi! You are on the "+pageName+" page.";
+ greeting.textContent=greetingText;
+ greeter.appendChild(greeting);greeter.appendChild(character);document.body.appendChild(greeter);greeter.classList.add('is-intro');
+ setTimeout(function(){greeter.classList.remove('is-intro')},4800);
+ if('speechSynthesis' in window&&'SpeechSynthesisUtterance' in window){
+  var utterance=new SpeechSynthesisUtterance(greetingText);utterance.lang='en-IN';utterance.rate=.95;utterance.pitch=1.05;
+  var voices=window.speechSynthesis.getVoices(),female=/female|woman|zira|hazel|susan|samantha|victoria|aria|jenny|heera|neerja|swara|priya|kavya|sara|libby|sonia/i;
+  var voice=voices.find(function(v){return /^en-in/i.test(v.lang)&&female.test(v.name)})||voices.find(function(v){return /^en/i.test(v.lang)&&female.test(v.name)})||voices.find(function(v){return /^en-in/i.test(v.lang)})||voices.find(function(v){return /^en/i.test(v.lang)});
+  if(voice){utterance.voice=voice;utterance.lang=voice.lang}
+  window.speechSynthesis.cancel();window.speechSynthesis.speak(utterance);
+  window.addEventListener('pagehide',function(){window.speechSynthesis.cancel()});
+ }
  var btn=el('button','chatbtn','<span>🤖</span><span class="t">Ask AI</span><i class="dot"></i>');btn.setAttribute('aria-label','Open AI chat');
  var box=el('div','chat');box.setAttribute('role','dialog');box.setAttribute('aria-label','AI assistant');
  box.innerHTML='<div class="ch"><div class="bot">🤖</div><div><b>DMS AI Assistant</b><small>● Online. Ask me anything</small></div><button aria-label="Close chat">×</button></div><div class="cm" aria-live="polite"></div><div class="qr"></div><form class="cf"><input type="text" maxlength="600" placeholder="Type your question..." aria-label="Message"><button type="submit" aria-label="Send">➤</button></form>';
@@ -37,7 +54,7 @@
   .catch(function(){return faq(text)})
   .then(function(a){clearTimeout(to);t.remove();add('bot',a,true);busy=false})}
  box.querySelector('form').onsubmit=function(e){e.preventDefault();send(inp.value)};
- function show(o){open=o;box.classList.toggle('open',o);btn.style.display=o?'none':'flex';try{sessionStorage.setItem(KEY+'o',o?'1':'0')}catch(e){}if(o){cm.scrollTop=cm.scrollHeight;setTimeout(function(){inp.focus()},50)}}
+ function show(o){open=o;box.classList.toggle('open',o);btn.style.display=o?'none':'flex';greeter.classList.toggle('is-hidden',o);if(o){cm.scrollTop=cm.scrollHeight;setTimeout(function(){inp.focus()},50)}}
  btn.onclick=function(){show(true)};box.querySelector('.ch button').onclick=function(){show(false)};
  if(!msgs.length){add('bot','Hi! 👋 I am the AI assistant of **Digimarketingsolutions**. Ask me anything: marketing, our services, pricing, or any general question.',true)}
  else{msgs.forEach(function(m){add(m.role==='user'?'me':'bot',m.content,false)});qr.style.display='none'}

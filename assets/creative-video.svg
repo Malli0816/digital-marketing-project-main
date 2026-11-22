@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 640" fill="none">
+  <defs>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientTransform="matrix(0 330 -330 0 710 320)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6D5DFC" stop-opacity=".19"/>
+      <stop offset="1" stop-color="#6D5DFC" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="screen" x1="590" x2="875" y1="162" y2="463" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0B5FFF" stop-opacity=".2"/>
+      <stop offset="1" stop-color="#00B3A4" stop-opacity=".13"/>
+    </linearGradient>
+  </defs>
+  <circle cx="710" cy="320" r="330" fill="url(#glow)"/>
+  <rect x="588" y="121" width="313" height="398" rx="30" fill="#fff" fill-opacity=".48" stroke="#0B5FFF" stroke-opacity=".17" stroke-width="2"/>
+  <rect x="611" y="148" width="267" height="301" rx="20" fill="url(#screen)" stroke="#0B5FFF" stroke-opacity=".12"/>
+  <circle cx="745" cy="297" r="63" fill="#fff" fill-opacity=".7"/>
+  <path d="m733 269 44 28-44 28v-56Z" fill="#0B5FFF" fill-opacity=".58"/>
+  <path d="M631 479h112m25 0h84" stroke="#0A1F44" stroke-linecap="round" stroke-opacity=".16" stroke-width="8"/>
+  <rect x="111" y="231" width="393" height="212" rx="24" fill="#fff" fill-opacity=".5" stroke="#00B3A4" stroke-opacity=".17" stroke-width="2"/>
+  <path d="M133 259h34m15 0h34m15 0h34m15 0h34m15 0h34m15 0h34m15 0h34" stroke="#0B5FFF" stroke-linecap="round" stroke-opacity=".2" stroke-width="7"/>
+  <rect x="133" y="282" width="108" height="138" rx="12" fill="#0B5FFF" fill-opacity=".08"/>
+  <rect x="252" y="282" width="108" height="138" rx="12" fill="#00B3A4" fill-opacity=".1"/>
+  <rect x="371" y="282" width="110" height="138" rx="12" fill="#6D5DFC" fill-opacity=".09"/>
+  <path d="m175 365 22-27 21 15 13-21" stroke="#0B5FFF" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".45" stroke-width="5"/>
+  <circle cx="306" cy="351" r="24" stroke="#00B3A4" stroke-opacity=".4" stroke-width="8"/>
+  <path d="m411 352 21-19 27 33" stroke="#6D5DFC" stroke-linecap="round" stroke-linejoin="round" stroke-opacity=".42" stroke-width="6"/>
+  <circle cx="536" cy="139" r="10" fill="#00B3A4" fill-opacity=".4"/>
+  <circle cx="934" cy="465" r="8" fill="#0B5FFF" fill-opacity=".3"/>
+</svg>
