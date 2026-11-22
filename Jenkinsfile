@@ -9,12 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh '''
@@ -45,10 +39,30 @@ pipeline {
         stage('Deploy to Docker') {
             steps {
                 sh '''
-                    docker rm -f ${CONTAINER_NAME} 2>/dev/null || true
+                    docker rm -f "${CONTAINER_NAME}" 2>/dev/null || true
+
+                    conflicts=$(docker ps --filter "publish=${PORT}" --format '{{.ID}}')
+                    for container_id in $conflicts; do
+                        name=$(docker inspect --format '{{.Name}}' "$container_id")
+                        name=${name#/}
+                        image=$(docker inspect --format '{{.Config.Image}}' "$container_id")
+                        image_name=${image%:*}
+
+                        if [ "$name" = "${CONTAINER_NAME}" ] || [ "$image_name" = "${IMAGE_NAME}" ]; then
+                            echo "Removing previous Digital Marketing container: ${name} (${image})"
+                            docker rm -f "$container_id"
+                        else
+                            echo "Port ${PORT} is occupied by unrelated container: ${name} (${image}). Refusing to remove it."
+                            exit 1
+                        fi
+                    done
+
+                    if command -v ss >/dev/null 2>&1; then
+                        ss -ltnp "sport = :${PORT}"
+                    fi
 
                     docker run -d \
-                        --name ${CONTAINER_NAME} \
+                        --name "${CONTAINER_NAME}" \
                         --restart unless-stopped \
                         -p ${PORT}:80 \
                         ${IMAGE_NAME}:${BUILD_NUMBER}
