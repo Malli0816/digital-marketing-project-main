@@ -20,6 +20,17 @@
  // mobile menu
  var b=document.querySelector('.burger'),n=document.querySelector('nav');
  b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o)});
+ var serviceLink=document.querySelector('.has-sub > a');
+ if(serviceLink){
+  serviceLink.setAttribute('aria-expanded','false');
+  serviceLink.addEventListener('click',function(e){
+   if(window.innerWidth<=980){
+    e.preventDefault();
+    var item=serviceLink.parentElement,o=item.classList.toggle('open');
+    serviceLink.setAttribute('aria-expanded',o?'true':'false');
+   }
+  });
+ }
  // contact form: emailed to the business inbox + saved on the server as a backup
  var f=document.getElementById('cf');
  if(f)f.addEventListener('submit',function(e){e.preventDefault();
