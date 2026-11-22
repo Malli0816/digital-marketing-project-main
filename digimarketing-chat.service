@@ -1,0 +1,17 @@
+[Unit]
+Description=Digimarketingsolutions chat and contact API
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/node /opt/digimarketing/server.js
+EnvironmentFile=-/etc/digimarketing.env
+Environment=PORT=3000
+User=www-data
+Group=www-data
+StateDirectory=digimarketing
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
