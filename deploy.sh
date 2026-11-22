@@ -24,7 +24,7 @@ mkdir -p "$APP"; cp "$HERE/server/server.js" "$APP/server.js"
 if [ ! -f "$ENVF" ]; then
   echo
   echo "The AI chatbot needs an Anthropic API key (create one at https://console.anthropic.com)."
-  echo "Press Enter to skip. The chatbot will then use its built-in answers only."
+  echo "Press Enter to skip. AI replies will remain unavailable until an API key is configured."
   KEY=""; read -r -s -p "Anthropic API key: " KEY < /dev/tty || true; echo
   printf 'ANTHROPIC_API_KEY=%s\nCHAT_MODEL=claude-haiku-5-5\n' "$KEY" > "$ENVF"
   chmod 600 "$ENVF"

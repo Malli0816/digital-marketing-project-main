@@ -19,18 +19,14 @@
   $('.mesh').forEach(function(m,i){var k=i?-50:50;m.style.translate=(x*k)+'px '+(y*k)+'px'})});
  // mobile menu
  var b=document.querySelector('.burger'),n=document.querySelector('nav');
- b.addEventListener('click',function(){var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o)});
- var serviceLink=document.querySelector('.has-sub > a');
- if(serviceLink){
-  serviceLink.setAttribute('aria-expanded','false');
-  serviceLink.addEventListener('click',function(e){
-   if(window.innerWidth<=980){
-    e.preventDefault();
-    var item=serviceLink.parentElement,o=item.classList.toggle('open');
-    serviceLink.setAttribute('aria-expanded',o?'true':'false');
-   }
-  });
- }
+ var serviceItem=document.querySelector('.has-sub'),serviceToggle=serviceItem&&serviceItem.querySelector('.services-toggle');
+ b.addEventListener('click',function(){
+  var o=n.classList.toggle('open');b.setAttribute('aria-expanded',o);
+  if(!o&&serviceToggle){serviceItem.classList.remove('open');serviceToggle.setAttribute('aria-expanded','false')}
+ });
+ if(serviceToggle)serviceToggle.addEventListener('click',function(){
+  var o=serviceItem.classList.toggle('open');serviceToggle.setAttribute('aria-expanded',o);
+ });
  // contact form: emailed to the business inbox + saved on the server as a backup
  var f=document.getElementById('cf');
  if(f)f.addEventListener('submit',function(e){e.preventDefault();
@@ -39,7 +35,7 @@
   d._subject='New website enquiry from '+(d.name||'a visitor');d._template='table';d._captcha='false';
   btn.disabled=true;btn.textContent='Sending...';ok.style.display=bad.style.display='none';
   var hdr={'Content-Type':'application/json',Accept:'application/json'};
-  var p1=fetch('https://formsubmit.co/ajax/mallepallimalli@gmail.com',{method:'POST',headers:hdr,body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){return String(j.success)==='true'}).catch(function(){return false});
+  var p1=fetch('https://formsubmit.co/ajax/digimarketingsolutions16@gmail.com',{method:'POST',headers:hdr,body:JSON.stringify(d)}).then(function(r){return r.json()}).then(function(j){return String(j.success)==='true'}).catch(function(){return false});
   var p2=fetch('/api/contact',{method:'POST',headers:hdr,body:JSON.stringify(d)}).then(function(r){return r.ok}).catch(function(){return false});
   Promise.all([p1,p2]).then(function(a){if(a[0]||a[1]){f.reset();ok.style.display='block'}else bad.style.display='block';btn.disabled=false;btn.textContent='Send message'});
  });
