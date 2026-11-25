@@ -39,4 +39,48 @@
   var p2=fetch('/api/contact',{method:'POST',headers:hdr,body:JSON.stringify(d)}).then(function(r){return r.ok}).catch(function(){return false});
   Promise.all([p1,p2]).then(function(a){if(a[0]||a[1]){f.reset();ok.style.display='block'}else bad.style.display='block';btn.disabled=false;btn.textContent='Send message'});
  });
+ // show the welcome offer once per tab, after time on page or meaningful scroll
+ var offerKey='dms_offer_seen_v1',offerSeen=false;
+ try{offerSeen=sessionStorage.getItem(offerKey)==='1'}catch(e){}
+ if(!offerSeen){
+  var offer=document.createElement('div'),offerTimer,previousFocus;
+  offer.className='offer-overlay';
+  offer.innerHTML='<section class="offer-dialog" role="dialog" aria-modal="true" aria-labelledby="offer-title" aria-describedby="offer-description" tabindex="-1">'+
+   '<button class="offer-close" type="button" aria-label="Close offer">×</button>'+
+   '<div class="offer-visual"><img src="assets/marketing-growth.svg" alt="Digital marketing growth chart"><span class="offer-visual-tag">SMARTER DIGITAL GROWTH</span><div class="offer-metric"><b>More reach.</b><span>Better leads. Real growth.</span></div></div>'+
+   '<div class="offer-content"><span class="offer-eyebrow">A little welcome bonus</span><h2 id="offer-title">Let’s grow your business.</h2><p id="offer-description">Get <strong>5% off</strong> your digital marketing service and a free growth consultation with our team.</p>'+
+   '<div class="offer-code"><span>Your welcome code</span><strong>GROW5</strong></div>'+
+   '<a class="offer-claim" href="contact.html">Claim your 5% discount <span aria-hidden="true">→</span></a>'+
+   '<div class="offer-contact"><a class="offer-whatsapp" href="https://wa.me/916281312546?text=Hi%2C%20I%27d%20like%20to%20claim%20the%205%25%20discount%20with%20code%20GROW5" target="_blank" rel="noopener">💬 WhatsApp us</a><a class="offer-call" href="tel:+916281312546">📞 Call us</a></div>'+
+   '<small class="offer-note">Mention code GROW5 when you get in touch.</small></div></section>';
+  document.body.appendChild(offer);
+  var dialog=offer.querySelector('.offer-dialog'),closeButton=offer.querySelector('.offer-close');
+  function closeOffer(){
+   offer.classList.remove('is-open');document.body.classList.remove('offer-open');
+   document.removeEventListener('keydown',offerKeydown);
+   if(previousFocus&&typeof previousFocus.focus==='function')previousFocus.focus();
+  }
+  function offerKeydown(e){
+   if(e.key==='Escape'){closeOffer();return}
+   if(e.key!=='Tab')return;
+   var focusable=dialog.querySelectorAll('a[href],button:not([disabled])'),first=focusable[0],last=focusable[focusable.length-1];
+   if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}
+   else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}
+  }
+  function showOffer(){
+   if(offerSeen)return;
+   offerSeen=true;
+   try{sessionStorage.setItem(offerKey,'1')}catch(e){}
+   clearTimeout(offerTimer);previousFocus=document.activeElement;
+   document.body.classList.add('offer-open');offer.classList.add('is-open');
+   closeButton.focus();document.addEventListener('keydown',offerKeydown);
+  }
+  closeButton.addEventListener('click',closeOffer);
+  offer.addEventListener('click',function(e){if(e.target===offer)closeOffer()});
+  offerTimer=setTimeout(showOffer,12000);
+  addEventListener('scroll',function(){
+   var max=document.documentElement.scrollHeight-window.innerHeight;
+   if(max>0&&(window.scrollY||document.documentElement.scrollTop)/max>=.35)showOffer();
+  },{passive:true});
+ }
 })();
